@@ -1,34 +1,71 @@
-import { useContext, useState } from "react";
-import { Alert } from "react-native";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import AuthContent from "../components/auth/AuthContent";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
-import { AuthContext } from "../store/auth-context";
-import { login } from "../util/auth";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  const authCtx = useContext(AuthContext);
-
-  async function loginhandler({ nik, password }) {
+  const APIURL = `https://fadeshare.com/react/api/reactlogin`;
+  const authenticate = ({ nik, password }) => {
     setIsAuthenticating(true);
+    fetch(APIURL, {
+      method: "post",
+      header: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ nik: nik, password: password }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.loginCodes == "error") {
+          alert(responseJson.details);
+        } else {
+          const loginArray = JSON.stringify(responseJson.details[0]);
+          console.log(loginArray);
+          setData(loginArray);
+          navigation.replace("LandingPage");
+        }
+        setIsAuthenticating(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const [value, setValue] = useState();
+  const asyncKey = "userData";
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
     try {
-      const id = await login(nik, password);
-      authCtx.authenticate(id);
+      AsyncStorage.getItem(asyncKey).then((value) => {
+        if (value != null) {
+          navigation.replace("LandingPage");
+        }
+        setValue(value);
+      });
     } catch (error) {
-      Alert.alert(
-        "Authentication failed",
-        "Could not log you in. Please check your credential"
-      );
+      console.log(err);
+      navigation.replace("Login");
+    }
+  };
+
+  const setData = async (dataJson) => {
+    try {
+      AsyncStorage.setItem(asyncKey, dataJson);
+    } catch (error) {
       console.log(error);
     }
-    setIsAuthenticating(false);
-  }
+  };
 
   if (isAuthenticating) {
     return <LoadingOverlay message="Logging you in..." />;
   }
 
-  return <AuthContent onAuthenticate={loginhandler} />;
+  return <AuthContent onAuthenticate={authenticate} />;
 }

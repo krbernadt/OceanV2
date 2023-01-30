@@ -1,14 +1,15 @@
 import {
   View,
-  Text,
   StyleSheet,
-  Image,
   Dimensions,
-  Button,
   ScrollView,
+  Pressable,
+  Modal,
+  Text,
+  Alert,
 } from "react-native";
 import React from "react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import { ImageSlider } from "react-native-image-slider-banner";
 
@@ -16,7 +17,6 @@ import * as SplashScreen from "expo-splash-screen";
 
 import TitleText from "../components/ui/TitleText";
 import CardMenu from "../components/ui/CardMenu";
-import QrScanner from "./QrScanner";
 
 export default function ScannerMenu({ navigation }) {
   const [fontsLoaded] = useFonts({
@@ -30,7 +30,7 @@ export default function ScannerMenu({ navigation }) {
     }
     prepare();
   }, []);
-
+  const [modalVisible, setModalVisible] = useState(false);
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -41,7 +41,12 @@ export default function ScannerMenu({ navigation }) {
     return null;
   }
 
-  function pressHandler() {
+  function inHandler() {
+    setModalVisible(!modalVisible);
+    navigation.navigate("Attendance");
+  }
+  function outHandler() {
+    setModalVisible(!modalVisible);
     navigation.navigate("Attendance");
   }
 
@@ -50,25 +55,48 @@ export default function ScannerMenu({ navigation }) {
       <View style={styles.titleContainer}>
         <TitleText>{"QR - Scanner"}</TitleText>
       </View>
-      <View style={styles.imageContainer}>
-        <ImageSlider
-          data={[
-            { img: "https://www.w3schools.com/howto/img_snow_wide.jpg" },
-            { img: "https://www.w3schools.com/howto/img_nature_wide.jpg" },
-            { img: "https://www.w3schools.com/howto/img_mountains_wide.jpg" },
-          ]}
-          preview={false}
-          autoPlay={true}
-          autoPlayDelay={1}
-          caroselImageStyle={{ height: "100%" }}
-          closeIconColor="#fff"
-        />
-      </View>
+      <View style={styles.imageContainer}></View>
       <View style={styles.menuCard}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+          onLayout={onLayoutRootView}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Choose Your Attendance</Text>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={(() => setModalVisible(!modalVisible), inHandler)}
+              >
+                <Text style={styles.textStyle}>IN</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={(() => setModalVisible(!modalVisible), outHandler)}
+              >
+                <Text style={styles.textStyle}>OUT</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.buttonDismiss]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Dismiss</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+
         <ScrollView>
           <View style={styles.cardContainer}>
-            <CardMenu onPress={pressHandler}>{"ATTENDANCE"}</CardMenu>
-            <CardMenu onPress={pressHandler}>{"BOP"}</CardMenu>
+            <CardMenu onPress={() => setModalVisible(!modalVisible)}>
+              {"ATTENDANCE"}
+            </CardMenu>
+            <CardMenu>{"BOP"}</CardMenu>
           </View>
           <View style={styles.cardContainer2}>
             <CardMenu>{"test 1"}</CardMenu>
@@ -89,10 +117,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-    backgroundColor: "white",
+    backgroundColor: "#9cf2ff",
   },
   titleContainer: {
-    marginTop: "1%",
+    marginTop: deviceHeight > 710 ? "12%" : "8%",
     marginBottom: "2%",
   },
   menuImage: {
@@ -100,18 +128,24 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   imageContainer: {
-    width: "100%",
-    height: deviceWidth < 800 ? 140 : 150,
+    width: "95%",
+    height: deviceHeight < 800 ? 110 : 150,
     overflow: "hidden",
     flexDirection: "row",
+    backgroundColor: "white",
+    borderRadius: 20,
+    marginBottom: "5%",
   },
   menuCard: {
-    paddingTop: 20,
+    paddingVertical: "5%",
+
     paddingHorizontal: "10%",
-    height: "48%",
+    height: "60%",
     overflow: "hidden",
     marginBottom: 200,
-    width: "100%",
+    width: "95%",
+    backgroundColor: "#fff",
+    borderRadius: 20,
   },
   cardContainer: {
     flexDirection: "row",
@@ -123,5 +157,58 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "50%",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 50,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: "7%",
+    marginVertical: "3%",
+    marginHorizontal: "20%",
+    width: 100,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  buttonDismiss: {
+    backgroundColor: "red",
+    borderRadius: 20,
+    padding: "7%",
+    marginTop: "10%",
+    marginHorizontal: "20%",
+    width: 100,
+    elevation: 2,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontFamily: "exo-2",
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: "center",
+    fontFamily: "exo-2",
+    fontSize: 30,
   },
 });

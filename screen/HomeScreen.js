@@ -1,13 +1,5 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  Pressable,
-  ScrollView,
-} from "react-native";
-import React, { useContext, useCallback, useEffect } from "react";
+import { View, StyleSheet, Dimensions, ScrollView, Text } from "react-native";
+import React, { useCallback, useEffect } from "react";
 
 import { useFonts } from "expo-font";
 import { ImageSlider } from "react-native-image-slider-banner";
@@ -17,10 +9,9 @@ import * as SplashScreen from "expo-splash-screen";
 import TitleText from "../components/ui/TitleText";
 import CardMenu from "../components/ui/CardMenu";
 import IconButton from "../components/ui/IconButton";
-import { AuthContext } from "../store/auth-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function HomeScreen() {
-  const authCtx = useContext(AuthContext);
+export default function HomeScreen({ navigation }) {
   const [fontsLoaded] = useFonts({
     "hoca-bold": require("../assets/fonts/hoca-bold.ttf"),
     "exo-2": require("../assets/fonts/exo2-normal.ttf"),
@@ -49,18 +40,9 @@ export default function HomeScreen() {
         <View style={styles.headCon1}>
           <TitleText>{"OCEAN"}</TitleText>
         </View>
-        <View style={styles.headCon2}>
-          <IconButton onPress={authCtx.logout} />
-        </View>
       </View>
-      {/* <View style={styles.imageContainer}>
-        <Image
-          style={styles.menuImage}
-          source={require("../assets/images/menu-image.jpg")}
-        />
-      </View> */}
       <View style={styles.imageContainer}>
-        <ImageSlider
+        {/* <ImageSlider
           data={[
             { img: "https://www.w3schools.com/howto/img_snow_wide.jpg" },
             { img: "https://www.w3schools.com/howto/img_nature_wide.jpg" },
@@ -71,7 +53,8 @@ export default function HomeScreen() {
           autoPlayDelay={1}
           caroselImageStyle={{ height: "100%" }}
           closeIconColor="#fff"
-        />
+        /> */}
+        <Text>Test</Text>
       </View>
       <View style={styles.menuCard} onLayout={onLayoutRootView}>
         <ScrollView>
@@ -114,19 +97,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-    backgroundColor: "white",
+    backgroundColor: "#9cf2ff",
   },
   headCon1: {
-    width: "60%",
-    marginLeft: "5%",
+    width: "100%",
+    alignItems: "center",
   },
-  headCon2: {
-    width: "25%",
-  },
+
   titleContainer: {
     width: "100%",
     marginTop: deviceHeight > 710 ? "12%" : "8%",
-    marginBottom: "2%",
+    marginBottom: "1%",
     flexDirection: "row",
   },
   menuImage: {
@@ -134,18 +115,24 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   imageContainer: {
-    width: "100%",
-    height: deviceWidth < 800 ? 140 : 150,
+    width: "95%",
+    height: deviceHeight < 800 ? 120 : 150,
     overflow: "hidden",
     flexDirection: "row",
+    backgroundColor: "white",
+    borderRadius: 20,
+    marginBottom: "5%",
   },
   menuCard: {
-    paddingTop: "10%",
+    paddingVertical: "5%",
+
     paddingHorizontal: "10%",
     height: "60%",
     overflow: "hidden",
     marginBottom: 200,
-    width: "100%",
+    width: "95%",
+    backgroundColor: "#fff",
+    borderRadius: 20,
   },
   cardContainer: {
     flexDirection: "row",

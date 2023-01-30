@@ -1,15 +1,11 @@
 import { StyleSheet, Text, Pressable } from "react-native";
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import QrScanner from "../../screen/QrScanner";
-const Stack = createNativeStackNavigator();
-
-function CardMenu({ navigation, children, onPress }) {
+function CardMenu({ children, onPress }) {
   return (
     <Pressable
       style={({ pressed }) => [
         {
-          backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
+          backgroundColor: pressed ? "#9cf2ff" : "#DCF6F5",
         },
         styles.card,
       ]}
@@ -31,8 +27,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 10,
     borderRadius: 25,
-    borderWidth: 2,
-    borderColor: "#0001c0",
     marginBottom: 10,
   },
 });

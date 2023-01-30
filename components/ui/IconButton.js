@@ -57,8 +57,7 @@ const styles = StyleSheet.create({
   },
   buttonInnerContainer: {
     backgroundColor: "#0001C0",
-    paddingTop: "1%",
-    paddingBottom: "3%",
+    padding: "5%",
     elevation: 2,
   },
   buttonText: {

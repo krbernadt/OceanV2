@@ -1,36 +1,21 @@
 import { StyleSheet } from "react-native";
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { StatusBar } from "expo-status-bar";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import AnimatedSplash from "react-native-animated-splash-screen";
 
 import QrScanner from "./screen/QrScanner";
 import LoginScreen from "./screen/LoginScreen";
 import HomeScreen from "./screen/HomeScreen";
-import QrScanner2 from "./screen/QrScanner2";
-import HomeScreen2 from "./screen/HomeScreen2";
-import AboutScreen from "./screen/PageWebview";
+import ProfileMenu from "./screen/ProfileMenu";
 
 import ScannerMenu from "./screen/ScannerMenu";
-import AuthContextProvider, { AuthContext } from "./store/auth-context";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
-
-const MyTheme = {
-  dark: false,
-  colors: {
-    primary: "#0001c0",
-    background: "#fff",
-    card: "rgb(255, 255, 255)",
-    text: "rgb(28, 28, 30)",
-    border: "rgb(199, 199, 204)",
-    notification: "rgb(255, 69, 58)",
-  },
-};
 
 const config = {
   animation: "spring",
@@ -53,41 +38,25 @@ function AuthStack() {
       }}
     >
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="LandingPage" component={AuthenticatedStack} />
     </Stack.Navigator>
   );
 }
 
-// function AuthenticatedStack() {
-//   return (
-//     <Stack.Navigator
-//       screenOptions={{
-//         headerShown: false,
-//         contentStyle: { backgroundColor: "white" },
-//       }}
-//     >
-//       <Stack.Screen name="HomeScreen" component={ScannerMenu} />
-//     </Stack.Navigator>
-//   );
-// }
-
 function AuthenticatedStack() {
   return (
     <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
+      screenOptions={{}}
       activeColor="#3e2465"
       shifting="true"
-      inactiveColor="#fff"
+      inactiveColor="#D9D3EB"
       barStyle={{
         height: "10%",
-
         paddingTop: "2%",
-        backgroundColor: "#C0C0FD",
+        backgroundColor: "#fff",
       }}
     >
       <Tab.Screen
-        marginTop="10%"
         name="Home"
         component={HomeScreen}
         shifting={true}
@@ -111,39 +80,21 @@ function AuthenticatedStack() {
           ),
         }}
       />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileMenu}
+        shifting={true}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="face-man-profile"
+              color={color}
+              size={25}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
-  );
-}
-
-function HomeMenu() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerTintColor: "white",
-        headerStyle: { backgroundColor: "#025ef2" },
-        headerLeft: null,
-        headerBackButtonMenuEnabled: {
-          onChangeText: (event) => setSearch(event.nativeEvent.text),
-        },
-      }}
-    >
-      <Stack.Screen
-        name="SILANANG APP"
-        component={HomeScreen2}
-        options={{
-          title: "SILANANG - DASHBOARD",
-        }}
-      />
-      <Stack.Screen
-        name="Kunjungan"
-        component={AboutScreen}
-        options={{
-          title: "KUNJUNGAN",
-          headerBackVisible: false,
-          headerShown: false,
-        }}
-      />
-    </Stack.Navigator>
   );
 }
 
@@ -151,9 +102,8 @@ function MenuStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: true,
-        headerTitle: "",
-        headerStyle: { backgroundColor: "#C0C0FD" },
+        headerShown: false,
+        headerStyle: { backgroundColor: "#9cf2ff" },
       }}
     >
       <Stack.Screen name="QR-Scanner" component={ScannerMenu} />
@@ -172,22 +122,34 @@ function MenuStack() {
 }
 
 function Navigation() {
-  const authCtx = useContext(AuthContext);
-
   return (
     <NavigationContainer style={styles.rootScreen}>
-      {!authCtx.isAuthenticated && <AuthStack />}
-      {authCtx.isAuthenticated && <AuthenticatedStack />}
+      <StatusBar style="dark" />
+      <AuthStack />
     </NavigationContainer>
   );
 }
 
 export default function App() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoaded(true);
+    }, 1800);
+  }, []);
+
   return (
-    <AuthContextProvider>
-      <StatusBar style="dark" />
+    <AnimatedSplash
+      translucent={true}
+      isLoaded={isLoaded}
+      logoImage={require("./assets/pics.png")}
+      backgroundColor={"#0001c0"}
+      logoHeight={600}
+      logoWidth={300}
+    >
       <Navigation />
-    </AuthContextProvider>
+    </AnimatedSplash>
   );
 }
 
@@ -197,41 +159,3 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
 });
-
-// side code
-// <NavigationContainer style={styles.rootScreen} theme={MyTheme}>
-// <Tab.Navigator screenOptions={{}}>
-//   <Tab.Screen
-//     name="Home"
-//     component={HomeScreen}
-//     options={{
-//       tabBarIcon: ({ color }) => (
-//         <MaterialCommunityIcons name="home" color={color} size={26} />
-//       ),
-//     }}
-//   />
-//   <Tab.Screen
-//     name="null"
-//     component={ScannerMenu}
-//     options={{
-//       tabBarIcon: ({ color }) => (
-//         <MaterialCommunityIcons
-//           name="qrcode-scan"
-//           color={color}
-//           size={26}
-//         />
-//       ),
-//     }}
-//   />
-//   <Tab.Screen
-//     name="Profile"
-//     component={LoginScreen}
-//     options={{
-//       tabBarLabel: "Profile",
-//       tabBarIcon: ({ color }) => (
-//         <MaterialCommunityIcons name="account" color={color} size={26} />
-//       ),
-//     }}
-//   />
-// </Tab.Navigator>
-// </NavigationContainer>

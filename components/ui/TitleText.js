@@ -27,6 +27,6 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontFamily: "exo-2",
     fontWeight: "bold",
-    color: "#0001C0",
+    color: "##2597a8",
   },
 });
