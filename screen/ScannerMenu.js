@@ -11,8 +11,8 @@ import {
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useFonts } from "expo-font";
-import { ImageSlider } from "react-native-image-slider-banner";
-
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SplashScreen from "expo-splash-screen";
 
 import TitleText from "../components/ui/TitleText";
@@ -23,6 +23,21 @@ export default function ScannerMenu({ navigation }) {
     "hoca-bold": require("../assets/fonts/hoca-bold.ttf"),
     "exo-2": require("../assets/fonts/exo2-normal.ttf"),
   });
+  const [value, setValue] = useState();
+  const attLog = "attData";
+
+  const getLogData = () => {
+    try {
+      AsyncStorage.getItem(attLog).then((value) => {
+        if (value != null) {
+          navigation.navigate("Result");
+        }
+        setValue(value);
+      });
+    } catch (error) {
+      alert("No Data Found");
+    }
+  };
 
   useEffect(() => {
     async function prepare() {
@@ -43,11 +58,11 @@ export default function ScannerMenu({ navigation }) {
 
   function inHandler() {
     setModalVisible(!modalVisible);
-    navigation.navigate("Attendance");
+    navigation.navigate("Attendance", { paramStatus: 1 });
   }
   function outHandler() {
     setModalVisible(!modalVisible);
-    navigation.navigate("Attendance");
+    navigation.navigate("Attendance", { paramStatus: 2 });
   }
 
   return (
@@ -71,13 +86,13 @@ export default function ScannerMenu({ navigation }) {
               <Text style={styles.modalText}>Choose Your Attendance</Text>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={(() => setModalVisible(!modalVisible), inHandler)}
+                onPress={() => inHandler()}
               >
                 <Text style={styles.textStyle}>IN</Text>
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={(() => setModalVisible(!modalVisible), outHandler)}
+                onPress={() => outHandler()}
               >
                 <Text style={styles.textStyle}>OUT</Text>
               </Pressable>
@@ -94,7 +109,12 @@ export default function ScannerMenu({ navigation }) {
         <ScrollView>
           <View style={styles.cardContainer}>
             <CardMenu onPress={() => setModalVisible(!modalVisible)}>
-              {"ATTENDANCE"}
+              <View style={styles.cardIcon}>
+                <Ionicons name="git-network" size={50} color="white" />
+                <Text style={{ textAlign: "center", paddingTop: "3%" }}>
+                  ATTENDANCE
+                </Text>
+              </View>
             </CardMenu>
             <CardMenu>{"BOP"}</CardMenu>
           </View>
@@ -117,7 +137,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "100%",
-    backgroundColor: "#9cf2ff",
+    backgroundColor: "#246EE9",
   },
   titleContainer: {
     marginTop: deviceHeight > 710 ? "12%" : "8%",
@@ -199,6 +219,15 @@ const styles = StyleSheet.create({
     width: 100,
     elevation: 2,
   },
+  buttonLog: {
+    backgroundColor: "green",
+    borderRadius: 20,
+    padding: "7%",
+    marginVertical: "3%",
+    marginHorizontal: "20%",
+    width: 100,
+    elevation: 2,
+  },
   textStyle: {
     color: "white",
     fontWeight: "bold",
@@ -210,5 +239,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "exo-2",
     fontSize: 30,
+  },
+  cardIcon: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 10,
   },
 });

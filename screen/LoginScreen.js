@@ -7,7 +7,7 @@ import LoadingOverlay from "../components/ui/LoadingOverlay";
 export default function LoginScreen({ navigation }) {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  const APIURL = `https://fadeshare.com/react/api/reactlogin`;
+  const APIURL = `https://api.fadeintech.com/api/reactlogin`;
   const authenticate = ({ nik, password }) => {
     setIsAuthenticating(true);
     fetch(APIURL, {

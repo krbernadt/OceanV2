@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontFamily: "exo-2",
     fontWeight: "bold",
-    color: "##2597a8",
+    color: "#fff",
+    textAlign: "center",
   },
 });

@@ -11,6 +11,7 @@ import QrScanner from "./screen/QrScanner";
 import LoginScreen from "./screen/LoginScreen";
 import HomeScreen from "./screen/HomeScreen";
 import ProfileMenu from "./screen/ProfileMenu";
+import ResultScreen from "./screen/ResultScreen";
 
 import ScannerMenu from "./screen/ScannerMenu";
 
@@ -115,6 +116,13 @@ function MenuStack() {
             open: config,
             close: config,
           },
+        }}
+      />
+      <Stack.Screen
+        name="Result"
+        component={ResultScreen}
+        options={{
+          title: "Result",
         }}
       />
     </Stack.Navigator>

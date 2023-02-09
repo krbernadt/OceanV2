@@ -1,17 +1,19 @@
 import { StyleSheet, Text, Pressable } from "react-native";
+import { Entypo } from "@expo/vector-icons";
 
 function CardMenu({ children, onPress }) {
   return (
     <Pressable
       style={({ pressed }) => [
         {
-          backgroundColor: pressed ? "#9cf2ff" : "#DCF6F5",
+          backgroundColor: pressed ? "#93d4ff" : "#c9e9ff",
         },
         styles.card,
       ]}
       onPress={onPress}
     >
-      <Text>{children}</Text>
+      {/* <Entypo name="network" style={styles.icon} size={40} /> */}
+      <Text style={styles.subText}>{children}</Text>
     </Pressable>
   );
 }
@@ -28,5 +30,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 25,
     marginBottom: 10,
+    overflow: "hidden",
   },
 });

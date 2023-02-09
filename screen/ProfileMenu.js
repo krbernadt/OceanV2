@@ -16,9 +16,8 @@ import * as SplashScreen from "expo-splash-screen";
 
 import TitleText from "../components/ui/TitleText";
 import IconButton from "../components/ui/IconButton";
-import { FlatList } from "react-native-gesture-handler";
 
-export default function ScannerMenu({ navigation }) {
+export default function ProfileMenu({ navigation }) {
   const [fontsLoaded] = useFonts({
     "hoca-bold": require("../assets/fonts/hoca-bold.ttf"),
     "exo-2": require("../assets/fonts/exo2-normal.ttf"),
@@ -26,15 +25,11 @@ export default function ScannerMenu({ navigation }) {
 
   const [refreshing, setRefreshing] = useState(true);
 
-  const [qrID, setQrID] = useState();
+  // const [qrID, setQrID] = useState();
   const [name, setName] = useState();
   const [nik, setNik] = useState();
-  const [dateRec, setDateRec] = useState();
-  const [timeRec, setTimeRec] = useState();
-  const [qrCode, setQrCode] = useState();
   const [value, setValue] = useState();
-  const [status, setStatus] = useState();
-  const attKey = "attData";
+  const attKey = "userData";
 
   useEffect(() => {
     getAttData();
@@ -47,13 +42,8 @@ export default function ScannerMenu({ navigation }) {
         .then((value) => {
           if (value != null) {
             setRefreshing(false);
-            setQrID(value.qrID);
             setName(value.name);
             setNik(value.nik);
-            setDateRec(value.dateRec);
-            setTimeRec(value.timeRec);
-            setQrCode(value.qrCode);
-            setStatus(value.status);
           }
           setValue(value);
         });
@@ -88,12 +78,6 @@ export default function ScannerMenu({ navigation }) {
     return null;
   }
 
-  const Item = ({ title }) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.rootContainer}>
       <ScrollView
@@ -108,33 +92,15 @@ export default function ScannerMenu({ navigation }) {
           </View>
           <View style={styles.imageContainer}>
             <Text style={styles.subTitle}>
-              {"\n"}Hey there
-              {"\n"}
-              {name} - {nik} - {qrID}
-              {"\n"}
-              {dateRec} - {timeRec}
-              {"\n"}
-              {qrCode} - {status}
+              <Text style={{ fontSize: 30 }}>
+                Hey there{"\n"}
+                {name} - {nik}
+                {deviceHeight}
+              </Text>
             </Text>
-          </View>
-          <View>
-            {/* <Text>
-            {"\n"}
-            device height :{deviceHeight}
-          </Text>
-          <Text>
-            {"\n"}
-            device width :{deviceWidth}
-          </Text> */}
-            {/* <FlatList
-              data={getAttData}
-              renderItem={({ item }) => <Item title={item.title} />}
-              keyExtractor={(item) => item.id}
-            ></FlatList> */}
-          </View>
-
-          <View style={styles.headCon2}>
-            <IconButton onPress={signOut} />
+            <View style={styles.headCon2}>
+              <IconButton onPress={signOut} />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -148,8 +114,9 @@ const deviceHeight = Dimensions.get("window").height;
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    backgroundColor: "#9cf2ff",
+    backgroundColor: "#246EE9",
     paddingTop: "10%",
+    borderRadius: "50%",
   },
   secondContainer: {
     alignItems: "center",
@@ -157,25 +124,25 @@ const styles = StyleSheet.create({
   headCon2: {
     width: "50%",
     margin: "20%",
-    alignItems: "center",
   },
   titleContainer: {
     marginTop: "1%",
-    marginBottom: "2%",
+    marginBottom: "25%",
   },
   imageContainer: {
     paddingVertical: "5%",
     paddingHorizontal: "10%",
-    height: "40%",
+    height: deviceHeight > 800 ? "80%" : "60%",
     overflow: "hidden",
     marginBottom: 10,
     width: "95%",
     backgroundColor: "#fff",
     borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   subTitle: {
     textAlign: "center",
     fontFamily: "exo-2",
-    fontSize: 15,
   },
 });

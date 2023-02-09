@@ -3,7 +3,7 @@ import { useEffect, useCallback } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-function IconButton({ onPress }) {
+function IconButton2({ onPress }) {
   const [fontsLoaded] = useFonts({
     "hoca-bold": require("../../assets/fonts/hoca-bold.ttf"),
     "exo-2": require("../../assets/fonts/exo2-normal.ttf"),
@@ -38,7 +38,7 @@ function IconButton({ onPress }) {
         android_ripple={{ color: "#000" }}
       >
         <Text style={styles.buttonText} onLayout={onLayoutRootView}>
-          Sign Out
+          Scan Again
         </Text>
       </Pressable>
     </View>
