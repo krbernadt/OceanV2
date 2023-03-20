@@ -70,7 +70,7 @@ export default function ScannerMenu({ navigation }) {
       <View style={styles.titleContainer}>
         <TitleText>{"QR - Scanner"}</TitleText>
       </View>
-      <View style={styles.imageContainer}></View>
+      {/* <View style={styles.imageContainer}></View> */}
       <View style={styles.menuCard}>
         <Modal
           animationType="slide"
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   },
   menuCard: {
     paddingVertical: "5%",
-
+    marginTop: "25%",
     paddingHorizontal: "10%",
     height: "60%",
     overflow: "hidden",

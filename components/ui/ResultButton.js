@@ -3,7 +3,7 @@ import { useEffect, useCallback } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-function IconButton2({ onPress }) {
+function ResultButton({ onPress }) {
   const [fontsLoaded] = useFonts({
     "hoca-bold": require("../../assets/fonts/hoca-bold.ttf"),
     "exo-2": require("../../assets/fonts/exo2-normal.ttf"),
@@ -45,7 +45,7 @@ function IconButton2({ onPress }) {
   );
 }
 
-export default IconButton;
+export default ResultButton;
 
 const styles = StyleSheet.create({
   buttonOuterContainer: {

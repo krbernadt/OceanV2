@@ -1,12 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  RefreshControl,
-} from "react-native";
+import { View, StyleSheet, Dimensions, Text, SafeAreaView } from "react-native";
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -80,30 +72,22 @@ export default function ProfileMenu({ navigation }) {
 
   return (
     <SafeAreaView style={styles.rootContainer}>
-      <ScrollView
-        contentContainerStyle={styles.scrollView}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={getAttData} />
-        }
-      >
-        <View style={styles.secondContainer} onLayout={onLayoutRootView}>
-          <View style={styles.titleContainer}>
-            <TitleText>{"Profile"}</TitleText>
-          </View>
-          <View style={styles.imageContainer}>
-            <Text style={styles.subTitle}>
-              <Text style={{ fontSize: 30 }}>
-                Hey there{"\n"}
-                {name} - {nik}
-                {deviceHeight}
-              </Text>
+      <View style={styles.secondContainer} onLayout={onLayoutRootView}>
+        <View style={styles.titleContainer}>
+          <TitleText>{"Profile"}</TitleText>
+        </View>
+        <View style={styles.imageContainer}>
+          <Text style={styles.subTitle}>
+            <Text style={{ fontSize: 30 }}>
+              Hey{"\n"}
+              {name}
             </Text>
-            <View style={styles.headCon2}>
-              <IconButton onPress={signOut} />
-            </View>
+          </Text>
+          <View style={styles.headCon2}>
+            <IconButton onPress={signOut} />
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -116,7 +100,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#246EE9",
     paddingTop: "10%",
-    borderRadius: "50%",
   },
   secondContainer: {
     alignItems: "center",
@@ -132,7 +115,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     paddingVertical: "5%",
     paddingHorizontal: "10%",
-    height: deviceHeight > 800 ? "80%" : "60%",
+    height: deviceHeight > 800 ? "60%" : "40%",
     overflow: "hidden",
     marginBottom: 10,
     width: "95%",

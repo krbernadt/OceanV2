@@ -4,7 +4,6 @@ import {
   Dimensions,
   ScrollView,
   Text,
-  Pressable,
   RefreshControl,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
@@ -25,17 +24,13 @@ export default function HomeScreen({ navigation }) {
   const [isLoading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(true);
   const [data, setData] = useState([]);
-  const [dataTitle, setDataTitle] = useState([]);
-
+  const [hours, setHours] = useState();
   const [name, setName] = useState();
   const [nik, setNik] = useState();
-  // const [dateTime, setDateTime] = useState();
-  // const [dept, setDept] = useState();
-  // const [scanStatus, setScanStatus] = useState();
   const [value, setValue] = useState();
   const attKey = "userData";
-  // const nik = 12345;
   const dataURL = `https://api.fadeintech.com/api/getAttLog?nik=${nik}`;
+  var date = new Date();
 
   useEffect(() => {
     getAttData();
@@ -50,11 +45,28 @@ export default function HomeScreen({ navigation }) {
             setRefreshing(false);
             setName(value.name);
             setNik(value.nik);
+            setHours(date.getHours());
           }
           setValue(value);
+          fetch(`https://api.fadeintech.com/api/getAttLog?nik=${value.nik}`)
+            .then((response) => response.json())
+            .then((json) => {
+              if (json.msgCode == "success") {
+                setData(json.details);
+                // console.log(JSON.stringify(json.details));
+                setLoading(true);
+              } else {
+                setLoading(false);
+              }
+            })
+            .catch((error) => {
+              if (error) {
+                console.log("error");
+              }
+            });
         });
     } catch (error) {
-      console.log(error);
+      console.log("error");
     }
   };
 
@@ -64,12 +76,11 @@ export default function HomeScreen({ navigation }) {
       .then((json) => {
         if (json.msgCode == "success") {
           setData(json.details);
-          console.log(JSON.stringify(json.details));
+          // console.log(JSON.stringify(json.details));
           setLoading(true);
         } else {
           setLoading(false);
         }
-        setDataTitle(json);
       })
       .catch((error) => {
         if (error) {
@@ -149,26 +160,33 @@ export default function HomeScreen({ navigation }) {
                   maxWidth: "90%",
                 }}
               >
-                {"\n"}
-                {name} {"\n"}
-                {nik}
-                {"\n"}
-                Status ={" "}
-                {data.last_status != null ? (
-                  data.last_status == 1 ? (
-                    <Text>In</Text>
-                  ) : (
-                    <Text>Out</Text>
-                  )
+                {hours < 12 ? (
+                  <Text style={{ fontSize: 25 }}>Good Morning</Text>
+                ) : hours < 18 ? (
+                  <Text style={{ fontSize: 25 }}>Good Afternoon</Text>
                 ) : (
-                  <Text>Unknown</Text>
+                  <Text style={{ fontSize: 25 }}>Good Evening</Text>
                 )}
                 {"\n"}
-                Previous Scan = {"\n"}
+                <Text style={{ fontSize: 25 }}>{name}</Text>
+                {"\n"}
+                {"\n"}
+                Status :{" "}
+                {data.last_status != null ? (
+                  data.last_status == 1 ? (
+                    <Text style={{ color: "green" }}>IN</Text>
+                  ) : (
+                    <Text style={{ color: "red" }}>OUT</Text>
+                  )
+                ) : (
+                  <Text style={{ color: "red" }}>Scroll down to get data</Text>
+                )}
+                {"\n"}
+                Attendance Time :{" "}
                 {data.last_datetime_rec != null ? (
                   data.last_datetime_rec
                 ) : (
-                  <Text>Unknown</Text>
+                  <Text style={{ color: "red" }}>Scroll down to get data</Text>
                 )}
               </Text>
             </View>
@@ -223,7 +241,6 @@ export default function HomeScreen({ navigation }) {
   );
 }
 
-const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({

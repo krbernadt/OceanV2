@@ -5,7 +5,8 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TitleText from "../components/ui/TitleText";
-import IconButton2 from "../components/ui/IconButton";
+import ResultButton from "../components/ui/ResultButton";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 
 export default function ResultScreen({ navigation, route }) {
   const [fontsLoaded] = useFonts({
@@ -82,13 +83,23 @@ export default function ResultScreen({ navigation, route }) {
         {isLoading ? (
           <View style={styles.imageContainer}>
             <Text style={styles.subTitle}>
-              {"\n"}Hey there
+              {"\n"}Scan Success
               {"\n"}
               {data.emp_name} - {nik}
               {"\n"}
               {data.emp_dept}
               {"\n"}
-              {data.status == 1 ? <Text>IN</Text> : <Text>OUT</Text>}
+              {data.status == 1 ? (
+                <Text style={{ color: "green" }}>IN</Text>
+              ) : (
+                <Text style={{ color: "red" }}>OUT</Text>
+              )}
+              {"\n"}
+              {data.status == 1 ? (
+                <Text>Safety First</Text>
+              ) : (
+                <Text>Good Work, Have a Good Day</Text>
+              )}
             </Text>
           </View>
         ) : (
@@ -97,7 +108,7 @@ export default function ResultScreen({ navigation, route }) {
               style={{
                 paddingTop: 30,
                 fontWeight: "bold",
-                fontSize: 20,
+                fontSize: 25,
                 color: "#E48112",
                 justifyContent: "center",
                 textAlign: "center",
@@ -108,7 +119,7 @@ export default function ResultScreen({ navigation, route }) {
           </View>
         )}
         <View style={styles.headCon2}>
-          <IconButton2 onPress={() => navigation.navigate("QR-Scanner")} />
+          <ResultButton onPress={() => navigation.navigate("QR-Scanner")} />
         </View>
       </View>
     </SafeAreaView>
@@ -137,11 +148,12 @@ const styles = StyleSheet.create({
     marginBottom: "2%",
   },
   imageContainer: {
-    paddingVertical: "5%",
+    paddingVertical: "2%",
     paddingHorizontal: "10%",
     height: "40%",
     overflow: "hidden",
     marginBottom: 10,
+    marginTop: "10%",
     width: "95%",
     backgroundColor: "#fff",
     borderRadius: 20,
@@ -149,6 +161,6 @@ const styles = StyleSheet.create({
   subTitle: {
     textAlign: "center",
     fontFamily: "exo-2",
-    fontSize: 15,
+    fontSize: 20,
   },
 });
